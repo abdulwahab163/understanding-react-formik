@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
 import TextError from "./TextError";
 
@@ -8,7 +8,13 @@ const initialValues = {
   email: "",
   channel: "",
   comments: "",
-  addess: "",
+  address: "",
+  social: {
+    facebook: "",
+    twitter: "",
+  },
+  phoneNumbers: ["", ""],
+  phNumbers: [""],
 };
 const onSubmit = (values) => {
   console.log("form data", values);
@@ -71,6 +77,52 @@ function YoutubeForm() {
               );
             }}
           </Field>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook Profile</label>
+          <Field type="text" id="facebook" name="social.facebook" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter Profile</label>
+          <Field type="text" id="twitter" name="social.twitter" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="primaryPh">Primary Phone</label>
+          <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="secondaryPh">Secondary Phone</label>
+          <Field type="text" id="secondaryPh" name="phoneNumbers[1]" />
+        </div>
+
+        <div className="form-control">
+          <label>List of Phone Numbers</label>
+          <FieldArray name="phNumbers">
+            {(fieldArrayProps) => {
+              const { push, remove, form } = fieldArrayProps;
+              const { values } = form;
+              const { phNumbers } = values;
+              return (
+                <div>
+                  {phNumbers.map((phNumber, index) => {
+                    <div key={index}>
+                      <Field name={`phNumbers[${index}]`} />
+                      <button type="button" onClick={() => remove(index)}>
+                        -
+                      </button>
+                      <button type="button" onClick={() => push("")}>
+                        +
+                      </button>
+                    </div>;
+                  })}
+                </div>
+              );
+            }}
+          </FieldArray>
         </div>
 
         <button type="submit">Submit</button>
